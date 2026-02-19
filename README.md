@@ -2,7 +2,7 @@
 
 A cloud-style machine learning GUI built with Streamlit. Upload your data, explore it visually, train models, and track experiments — all without writing a single line of code.
 
-> Built as a portfolio project for CIS432 — inspired by platforms like Google Cloud Vertex AI and AWS SageMaker.
+> Built as a portfolio project for CIS432
 
 ---
 
