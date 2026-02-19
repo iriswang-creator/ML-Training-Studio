@@ -48,49 +48,6 @@ A cloud-style machine learning GUI built with Streamlit. Upload your data, explo
 
 ---
 
-## 🛠️ Installation
-
-**Requirements:** Python 3.9+
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/ml-training-studio.git
-cd ml-training-studio
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Run the app
-streamlit run app.py
-```
-
-The app will open automatically at `http://localhost:8501`.
-
----
-
-## 📦 Dependencies
-
-| Package | Purpose |
-|---|---|
-| `streamlit` | Web GUI framework |
-| `pandas` | Data loading and manipulation |
-| `numpy` | Numerical operations |
-| `matplotlib` | Plotting |
-| `seaborn` | Statistical visualizations |
-| `scikit-learn` | ML models and evaluation metrics |
-
----
-
-## 📁 Project Structure
-
-```
-ml-training-studio/
-├── app.py              # Main Streamlit application
-├── requirements.txt    # Python dependencies
-└── README.md           # This file
-```
----
-
 ## 🗺️ Roadmap
 
 Planned features for future versions:
