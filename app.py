@@ -92,8 +92,54 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ── Welcome / About Section ───────────────────────────────────────────────────
+with st.expander("ℹ️ What is ML Training Studio? — Click to learn how to use this tool", expanded=False):
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        st.markdown("""
+**🎯 What is this?**
+
+ML Training Studio is a cloud-style machine learning GUI — inspired by platforms like
+Google Cloud Vertex AI and AWS SageMaker. It lets you build, train, and evaluate ML models
+on any tabular dataset, entirely without code.
+
+**👤 Who is it for?**
+
+Students, analysts, and anyone who wants to explore ML workflows quickly without setting up
+a coding environment.
+        """)
+    with col_b:
+        st.markdown("""
+**🗺️ How to use it — 5 steps:**
+
+`01 Upload` — Upload a CSV file to load your dataset
+
+`02 Visualize` — Explore distributions, correlations, and categorical counts
+
+`03 Configure` — Set seed, pick target, features, model & hyperparameters
+
+`04 Results` — View metrics, feature importance, and test set predictions
+
+`05 Experiments` — Compare runs, download model or log
+        """)
+    with col_c:
+        st.markdown("""
+**🤖 Supported Models**
+
+*Classification:* Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, KNN, SVM
+
+*Regression:* Linear, Ridge, Lasso, Decision Tree, Random Forest, Gradient Boosting, KNN, SVM
+
+**💡 Tips**
+
+- Always set the **Random Seed** first in Section 03 for reproducibility
+- Use **5-Fold CV** for smaller datasets
+- Check **Feature Importance** to understand what drives predictions
+        """)
+
 # ── Session state ─────────────────────────────────────────────────────────────
-for key, val in [("df", None), ("model_log", []), ("trained_model", None), ("trained_model_name", "")]:
+for key, val in [("df", None), ("model_log", []), ("trained_model", None),
+                 ("trained_model_name", ""), ("all_models", {})]:
     if key not in st.session_state:
         st.session_state[key] = val
 
@@ -338,6 +384,7 @@ if df is not None:
             y_pred = model.predict(X_test)
             st.session_state.trained_model = model
             st.session_state.trained_model_name = model_name
+            st.session_state.all_models[model_name] = model
 
             if task_type == "Classification":
                 acc = accuracy_score(y_test, y_pred)
@@ -430,7 +477,7 @@ if df is not None:
     st.markdown("""
     <div class="section-intro">
     Every trained model is logged here with its name, hyperparameters, and metrics.
-    Compare runs side by side, download the log as CSV, or download the last trained model as a .pkl file.
+    Compare runs side by side, download the experiment log as CSV, or select any trained model to download as a .pkl file.
     </div>
     """, unsafe_allow_html=True)
 
@@ -438,29 +485,41 @@ if df is not None:
         log_df = pd.DataFrame(st.session_state.model_log)
         st.dataframe(log_df, use_container_width=True)
 
+        st.markdown("#### ⬇️ Downloads")
         dl1, dl2, dl3 = st.columns(3)
 
         # Download experiment log
         with dl1:
             csv = log_df.to_csv(index=False).encode("utf-8")
-            st.download_button("⬇️ Download Experiment Log", csv,
+            st.download_button("📄 Download Experiment Log (.csv)", csv,
                                "experiment_log.csv", "text/csv")
 
-        # Download trained model
+        # Select which model to download
         with dl2:
-            if st.session_state.trained_model is not None:
-                model_bytes = pickle.dumps(st.session_state.trained_model)
+            if st.session_state.all_models:
+                model_names = list(st.session_state.all_models.keys())
+                selected_model_name = st.selectbox(
+                    "Select model to download",
+                    model_names,
+                    index=len(model_names) - 1   # default: most recent
+                )
+                selected_model = st.session_state.all_models[selected_model_name]
+                model_bytes = pickle.dumps(selected_model)
                 st.download_button(
-                    "⬇️ Download Trained Model (.pkl)",
+                    "🤖 Download Selected Model (.pkl)",
                     model_bytes,
-                    f"{st.session_state.trained_model_name}.pkl",
+                    f"{selected_model_name}.pkl",
                     "application/octet-stream"
                 )
+            else:
+                st.info("Train a model first to enable model download.")
 
         with dl3:
+            st.markdown("<br>", unsafe_allow_html=True)
             if st.button("🗑️ Clear Log"):
                 st.session_state.model_log = []
                 st.session_state.trained_model = None
+                st.session_state.all_models = {}
                 st.rerun()
     else:
         st.info("No experiments logged yet. Train a model above to start tracking!")
