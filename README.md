@@ -9,7 +9,7 @@ A cloud-style machine learning GUI built with Streamlit. Upload your data, explo
 ## 🚀 Live Demo
 
 <!-- After deploying, replace this with your Streamlit Cloud link -->
-🔗 [Launch App]([https://ml-training-studio.streamlit.app](https://ml-training-studio-evsxbgvmsh638cxrynzpyn.streamlit.app/))
+🔗 [Launch App](https://ml-training-studio-evsxbgvmsh638cxrynzpyn.streamlit.app)
 
 ---
 
